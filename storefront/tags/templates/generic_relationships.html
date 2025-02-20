@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Tags for Product 1 (Direct Query)</h2>
+    {% for tagged_item in tags_product1 %}
+        <div>{{ tagged_item.tag.label }}</div>
+    {% endfor %}
+
+    <h2>Tags for Product 2 (Custom Manager)</h2>
+    {% for tagged_item in tags_product2 %}
+        <div>{{ tagged_item.tag.label }}</div>
+    {% endfor %}
+</body>
+</html>

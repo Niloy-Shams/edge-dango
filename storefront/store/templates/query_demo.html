@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Ordered Products (First 5)</h2>
+    {% for product in ordered_products %}
+        <div>{{ product.title }} - ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Newest/Oldest Products</h2>
+    <div>Newest: {{ newest_product.title }}</div>
+    <div>Oldest: {{ oldest_product.title }}</div>
+
+    <h2>Page 2 Products (5-10)</h2>
+    {% for product in page_2_products %}
+        <div>{{ product.title }}</div>
+    {% endfor %}
+
+    <h2>Product Details (Distinct)</h2>
+    {% for item in product_details %}
+        <div>{{ item.title }} - ${{ item.price }} - {{ item.collection__title }}</div>
+    {% endfor %}
+</body>
+</html>

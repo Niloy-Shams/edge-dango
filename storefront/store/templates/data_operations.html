@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Data Operations Result</h2>
+    {% if success %}
+        <div style="color: green;">{{ message }}</div>
+        <h3>Updated Products</h3>
+        {% for product in updated_products %}
+            <div>{{ product.title }} - ${{ product.price }}</div>
+        {% endfor %}
+    {% else %}
+        <div style="color: red;">Error: {{ message }}</div>
+    {% endif %}
+</body>
+</html>

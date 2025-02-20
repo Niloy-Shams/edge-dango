@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "doctest2"
+version = "0.1.0"
+description = ""
+authors = ["Noor E Shams <shamsniloy75@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+django = "^5.1.5"
+django-debug-toolbar = "^5.0.1"
+mysqlclient = "^2.2.7"
+faker = "^35.2.0"
+djangorestframework = "^3.15.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

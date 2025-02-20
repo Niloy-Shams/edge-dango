@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Low Inventory AND Low Price (Method 1)</h2>
+    {% for product in method1 %}
+        <div>{{ product.title }} - Stock: {{ product.inventory }}, Price: ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Low Inventory AND Low Price (Method 2)</h2>
+    {% for product in method2 %}
+        <div>{{ product.title }} - Stock: {{ product.inventory }}, Price: ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Low Inventory OR Low Price</h2>
+    {% for product in discounted_or_low %}
+        <div>{{ product.title }} - Stock: {{ product.inventory }}, Price: ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>NOT Low Inventory</h2>
+    {% for product in not_low %}
+        <div>{{ product.title }} - Stock: {{ product.inventory }}</div>
+    {% endfor %}
+
+    <h2>Inventory Equals Price</h2>
+    {% for product in inventory_equals_price %}
+        <div>{{ product.title }} - Stock/Price: {{ product.inventory }}</div>
+    {% endfor %}
+</body>
+</html>

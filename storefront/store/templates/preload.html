@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Products with Collection (Inefficient)</h2>
+    {% for product in products_inefficient %}
+        <div>{{ product.title }} - {{ product.collection.title }}</div>
+    {% endfor %}
+
+    <h2>Products with Collection (Efficient)</h2>
+    {% for product in products_efficient %}
+        <div>{{ product.title }} - {{ product.collection.title }}</div>
+    {% endfor %}
+
+    <h2>Products with Category and Promotions</h2>
+    {% for product in products_with_relations %}
+        <div>
+            {{ product.title }} ({{ product.category.name }})
+            <ul>
+                {% for promotion in product.promotions.all %}
+                    <li>{{ promotion.description }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html>

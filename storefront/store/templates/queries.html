@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>All Products</h2>
+    {% for product in all_products %}
+        <div>{{ product.title }} - ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Single Product</h2>
+    {% if single_product %}
+        <div>{{ single_product.title }}</div>
+    {% else %}
+        <div>No product found</div>
+    {% endif %}
+
+    <h2>Affordable Products (< $120)</h2>
+    {% for product in affordable_products %}
+        <div>{{ product.title }} - ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>First Affordable Product</h2>
+    {% if first_product %}
+        <div>{{ first_product.title }}</div>
+    {% endif %}
+
+    <h2>Is Expensive Products?</h2>
+    <div>{{ has_expensive }}</div>
+</body>
+</html>

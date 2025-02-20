@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Products (only title and price)</h2>
+    {% for product in products_only %}
+        <div>{{ product.title }} - ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Products (deferred description and last_update)</h2>
+    {% for product in products_defer %}
+        <div>{{ product.title }} - ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Products (using values)</h2>
+    {% for product in products_values %}
+        <div>{{ product.title }} - ${{ product.price }}</div>
+    {% endfor %}
+
+    <h2>Extra Query Demo</h2>
+    <div>First Product Description: {{ first_product_desc }}</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Product Statistics</h2>
+    <div>Count: {{ stats.count }}</div>
+    <div>Max Price: ${{ stats.max_price }}</div>
+    <div>Min Price: ${{ stats.min_price }}</div>
+    <div>Average Price: ${{ stats.avg_price }}</div>
+
+    <h2>Products with Inventory Status</h2>
+    {% for product in products_with_status %}
+        <div>
+            {{ product.title }} - ${{ product.price }}
+            (Total Value: ${{ product.inventory_value }})
+            {% if product.is_low_stock %}
+                <span style="color: red">Low Stock!</span>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <h2>Collection Statistics</h2>
+    {% for collection in collection_stats %}
+        <div>
+            {{ collection.collection__title }}:
+            {{ collection.products_count }} products,
+            Min price: ${{ collection.min_price }}
+        </div>
+    {% endfor %}
+</body>
+</html>
