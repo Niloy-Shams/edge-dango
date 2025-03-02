@@ -15,12 +15,15 @@ def product_list(request):
 @api_view(['GET', 'POST'])
 def product_list_drf(request):
     if request.method == 'GET':     
-        products = Product.objects.prefetch_related('collection').all()
+        # Add select_related to fetch related fields in a single query
+        products = Product.objects\
+            .select_related('collection', 'category')\
+            .prefetch_related('promotions')\
+            .all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ProductSerializer(data=request.data)
-        # Using raise_exception=True for automatic error responses
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
