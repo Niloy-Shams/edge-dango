@@ -74,3 +74,14 @@ class Address(models.Model):
     
     def __str__(self):
         return self.city+','+self.street
+    
+class Review(models.Model):
+    rating = models.IntegerField()
+    description = models.TextField()
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+    
+    def __str__(self):
+        return str(self.rating)

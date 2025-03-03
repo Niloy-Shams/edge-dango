@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
-from store.models import Address, Category, Product, Customer, Collection, Promotion
+from store.models import Address, Category, Product, Customer, Collection, Promotion, Review
 import random
 
 class Command(BaseCommand):
@@ -58,5 +58,15 @@ class Command(BaseCommand):
                 city=fake.city(),
                 customer=customer
             )
+            
+        # Create reviews
+        for product in Product.objects.all():
+            for _ in range(random.randint(0, 10)):
+                Review.objects.create(
+                    rating=random.randint(1, 5),
+                    description=fake.paragraph(),
+                    product=product
+                )
+                
 
         self.stdout.write(self.style.SUCCESS('Successfully populated the database'))

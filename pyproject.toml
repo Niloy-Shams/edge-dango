@@ -12,6 +12,7 @@ django-debug-toolbar = "^5.0.1"
 mysqlclient = "^2.2.7"
 faker = "^35.2.0"
 djangorestframework = "^3.15.2"
+drf-nested-routers = "^0.94.1"
 
 
 [build-system]

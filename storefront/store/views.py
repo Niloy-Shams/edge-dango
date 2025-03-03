@@ -2,12 +2,12 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Count, Max, Min, Avg, Case, When, Value, IntegerField
-from store.models import Collection, Product
+from store.models import Collection, Product, Review
 from django.db import transaction
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CollectionSerializer, ProductSerializer, SimpleCollectoinSerializer
+from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer, SimpleCollectoinSerializer
 from rest_framework import status, viewsets
 
 def product_list(request):
@@ -128,7 +128,16 @@ class CollectionViewSet(viewsets.ModelViewSet):
                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
     
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
     
+    def get_queryset(self):
+        # Filter reviews by product_id from URL
+        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+    
+    def get_serializer_context(self):
+        # Pass product_id to serializer
+        return {'product_id': self.kwargs['product_pk']}
 
 def debug_view(request):
     return render(request, 'debug.html', {'name': 'Niloy'})
