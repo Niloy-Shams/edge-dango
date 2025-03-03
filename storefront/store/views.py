@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CollectionSerializer, ProductSerializer, SimpleCollectoinSerializer
-from rest_framework import status
+from rest_framework import status, viewsets
 
 def product_list(request):
     return HttpResponse('Product List')
@@ -112,6 +112,22 @@ class CollectionDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ProductViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
+class CollectionViewSet(viewsets.ModelViewSet):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+    
+    def destroy(self, request, *args, **kwargs):
+        collection = self.get_object()
+        if collection.product_set.count() > 0:
+            return Response({'error': 'Collection cannot be deleted because it has products.'},
+                           status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return super().destroy(request, *args, **kwargs)
+    
     
 
 def debug_view(request):
