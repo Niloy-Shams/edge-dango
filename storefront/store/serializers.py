@@ -29,3 +29,22 @@ class ProductSerializer(serializers.ModelSerializer):
         if value <= 0:
             raise serializers.ValidationError('Price must be greater than 0')
         return value
+    
+class SimpleProductSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'price']
+    
+class SimpleCollectoinSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Collection
+        fields = ['id', 'title']
+        
+class CollectionSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Collection
+        fields = ['id', 'title', 'product_set']
+    product_set = SimpleProductSerializer(many=True, read_only=True)

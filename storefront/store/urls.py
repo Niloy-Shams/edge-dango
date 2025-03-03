@@ -12,4 +12,11 @@ urlpatterns = [
     path('aggregate/', views.aggregate_demo, name='aggregate-demo'),
     path('data-operations/', views.data_operations, name='data-operations'),
     path('products-drf/', views.product_list_drf),
+    path('products-drf/<int:pk>/', views.product_detail_drf),
+    path('collections/', views.collection_list),
+    path('collections/<int:pk>/', views.collection_detail),
+    path('collections-class/', views.CollectionListClass.as_view()),
+    path('products-generic/', views.ProductListGeneric.as_view()),
+    path('products-generic/<int:pk>/', views.ProductDetailGeneric.as_view()),
+    path('collection-generic/<int:pk>/', views.CollectionDetailGeneric.as_view()),
 ]

@@ -1,12 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Count, Max, Min, Avg, Case, When, Value, IntegerField
-from store.models import Product
+from store.models import Collection, Product
 from django.db import transaction
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ProductSerializer
+from rest_framework.views import APIView
+from .serializers import CollectionSerializer, ProductSerializer, SimpleCollectoinSerializer
 from rest_framework import status
 
 def product_list(request):
@@ -27,6 +28,91 @@ def product_list_drf(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+@api_view(['GET', 'PUT', 'DELETE'])
+def product_detail_drf(request, pk):
+    product = get_object_or_404(
+        Product.objects.select_related('collection'),
+        pk=pk
+    )
+    if request.method == 'GET':
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ProductSerializer(instance=product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    elif request.method == 'DELETE':
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET', 'POST'])
+def collection_list(request):
+    if request.method == 'GET':
+        collections = Collection.objects.all()
+        serializer = SimpleCollectoinSerializer(collections, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = SimpleCollectoinSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+@api_view(['GET', 'PUT', 'DELETE'])
+def collection_detail(request, pk):
+    collection = get_object_or_404(
+        Collection.objects.prefetch_related, 
+        pk=pk
+    )
+    if request.method == 'GET':
+        serializer = CollectionSerializer(collection)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = SimpleCollectoinSerializer(instance=collection, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    elif request.method == 'DELETE':
+        if collection.product_set.count() > 0:
+            return Response({'error': 'Collection cannot be deleted because it has products.'}, 
+                           status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        collection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class CollectionListClass(APIView):
+    def get(self, request):
+        collections = Collection.objects.all()
+        serializer = SimpleCollectoinSerializer(collections, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = SimpleCollectoinSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+# Mixins and generics
+from rest_framework import mixins, generics
+class ProductListGeneric(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
+class ProductDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
+class CollectionDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+    def delete(self, request, *args, **kwargs):
+        collection = self.get_object()
+        if collection.product_set.count() > 0:
+            return Response({'error': 'Collection cannot be deleted because it has products.'},
+                           status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        collection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
 
 def debug_view(request):
     return render(request, 'debug.html', {'name': 'Niloy'})
